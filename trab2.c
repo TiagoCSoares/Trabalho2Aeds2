@@ -56,7 +56,7 @@ int geraAleatorio(){
 //Funções para o firstJob
 //First Job funciona
 
-
+/*
 void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
     fj *novoNo = (fj *)malloc(sizeof(fj));
     if (!novoNo) {
@@ -94,10 +94,10 @@ void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
         atual->prox = novoNo;
     }
 }
+*/
 
 
 
-/*
 void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
     fj *novoNo = (fj *)malloc(sizeof(fj));
     if (!novoNo) {
@@ -108,23 +108,29 @@ void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
     novoNo->unidadeTempo = novaUnidadeTempo;
     novoNo->prox = NULL;
 
-    if (*lista == NULL || novaUnidadeTempo < (*lista)->unidadeTempo) {
+    if (*lista == NULL) {
         // Inserir no início
         novoNo->prox = *lista;
         *lista = novoNo;
     } else {
         // Encontrar posição de inserção
-        fj *atual = *lista;
-        while (atual->prox != NULL && atual->prox->unidadeTempo < novaUnidadeTempo) {
+        fj *atual = (*lista)->prox;
+        fj *anterior = *lista;
+        if(atual == NULL) {
+           novoNo->prox = NULL;
+           (*lista)->prox = novoNo; 
+        }
+        while (atual != NULL && atual->unidadeTempo <= novaUnidadeTempo) {
+            anterior = atual;
             atual = atual->prox;
         }
 
         // Inserir no meio ou no final
-        novoNo->prox = atual->prox;
-        atual->prox = novoNo;
+        novoNo->prox = atual;
+        anterior->prox = novoNo;
     }
 }
-*/
+
 
 int firstJob() {
     int iteracoes = 0;
