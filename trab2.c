@@ -56,7 +56,7 @@ int geraAleatorio(){
 //Funções para o firstJob
 //First Job funciona
 
-
+/*
 void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
     fj *novoNo = (fj *)malloc(sizeof(fj));
     if (!novoNo) {
@@ -67,11 +67,22 @@ void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
     novoNo->unidadeTempo = novaUnidadeTempo;
     novoNo->prox = NULL;
 
-    if (*lista == NULL || novaUnidadeTempo < (*lista)->unidadeTempo) {
+    if (*lista == NULL) {
         // Inserir no início
         novoNo->prox = *lista;
         *lista = novoNo;
-    } else {
+    } else if (novaUnidadeTempo < (*lista)->unidadeTempo) {
+        fj* atual = (*lista)->prox;
+        if(novaUnidadeTempo < atual->unidadeTempo) {
+            (*lista)->prox = novoNo;
+            novoNo->prox = atual;
+        } else {
+            fj *atual = *lista;
+            while (atual->prox != NULL && atual->prox->unidadeTempo < novaUnidadeTempo) {
+            atual = atual->prox;
+        }
+        }
+    }  else {
         // Encontrar posição de inserção
         fj *atual = *lista;
         while (atual->prox != NULL && atual->prox->unidadeTempo < novaUnidadeTempo) {
@@ -83,7 +94,42 @@ void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
         atual->prox = novoNo;
     }
 }
+*/
 
+
+
+void inserirOrdenado(fj **lista, int novoProcesso, int novaUnidadeTempo) {
+    fj *novoNo = (fj *)malloc(sizeof(fj));
+    if (!novoNo) {
+        fprintf(stderr, "Erro ao alocar memória para o novo nó.\n");
+        exit(EXIT_FAILURE);
+    }
+    novoNo->processo = novoProcesso;
+    novoNo->unidadeTempo = novaUnidadeTempo;
+    novoNo->prox = NULL;
+
+    if (*lista == NULL) {
+        // Inserir no início
+        novoNo->prox = *lista;
+        *lista = novoNo;
+    } else {
+        // Encontrar posição de inserção
+        fj *atual = (*lista)->prox;
+        fj *anterior = *lista;
+        if(atual == NULL) {
+           novoNo->prox = NULL;
+           (*lista)->prox = novoNo; 
+        }
+        while (atual != NULL && atual->unidadeTempo <= novaUnidadeTempo) {
+            anterior = atual;
+            atual = atual->prox;
+        }
+
+        // Inserir no meio ou no final
+        novoNo->prox = atual;
+        anterior->prox = novoNo;
+    }
+}
 
 
 int firstJob() {
@@ -101,14 +147,13 @@ int firstJob() {
     iteracoes++;
     numero_processos++;
     
-    while(1) {
+    while(iteracoes < 100) {
         _30 = trinta();
         if(_30 == 1){
             fj *node = (fj*)malloc(sizeof(fj));
-            
-            inserirOrdenado(&lista, numero_processos, geraAleatorio());
+            tempo_criado = geraAleatorio();
+            inserirOrdenado(&lista, numero_processos, tempo_criado);
             processo_criado = numero_processos;
-            tempo_criado = node->unidadeTempo;
             numero_processos++;
             criado = 1;
             free(node);
@@ -235,7 +280,7 @@ int roundRobin() {
             desenfileirar(&lista);
             _6 = 0;
         }   
-        if (_6 = 6) {
+        if (_6 == 6) {
             enfileirar(&lista, lista.inicio->processo, lista.inicio->unidadeTempo);
             desenfileirar(&lista);
             _6 = 0;
